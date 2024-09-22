@@ -5,6 +5,7 @@ import flixel.FlxSubState;
 import flixel.effects.FlxFlicker;
 import lime.app.Application;
 import flixel.addons.transition.FlxTransitionableState;
+import mobile.backend.TouchFunctions;
 
 class FlashingState extends MusicBeatState
 {
@@ -15,31 +16,26 @@ class FlashingState extends MusicBeatState
 	{
 		super.create();
 
-		final enter:String = (controls.mobileC) ? 'A' : 'ENTER';
-		final back:String = (controls.mobileC) ? 'B' : 'BACK';
-
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
 		warnText = new FlxText(0, 0, FlxG.width,
 			"Hey, watch out!\n
 			This Mod contains some flashing lights!\n
-			Press " + enter + " to disable them now or go to Options Menu.\n
-			Press " + back + " to ignore this message.\n
+			Touch the screen to disable them now or go to Options Menu.\n
+			Press back to ignore this message.\n
 			You've been warned!",
 			32);
 		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
 		add(warnText);
-
-		addTouchPad('NONE', 'A_B');
 	}
 
 	override function update(elapsed:Float)
 	{
 		if(!leftState) {
-			var back:Bool = #if !mobile controls.BACK #else touchPad.buttonB.justPressed #end;
-			var accept:Bool = #if !mobile controls.ACCEPT #else touchPad.buttonA.justPressed #end;
+			var back:Bool = #if !mobile controls.BACK #else TouchFunctions.touchJustReleased #end;
+			var accept:Bool = #if !mobile controls.ACCEPT #else FlxG.android.justReleased.BACK #end;
 			    
 			if (accept || back) {
 				leftState = true;
