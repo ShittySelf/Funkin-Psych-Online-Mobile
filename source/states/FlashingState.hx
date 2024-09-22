@@ -38,8 +38,10 @@ class FlashingState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		if(!leftState) {
-			var back:Bool = controls.BACK;
-			if (controls.ACCEPT || back) {
+			var back:Bool = #if !mobile controls.BACK #else touchPad.buttonB.justPressed;
+			var accept:Bool = #if !mobile controls.ACCEPT #else touchPad.buttonA.justPressed;
+			    
+			if (accept || back) {
 				leftState = true;
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
